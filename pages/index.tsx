@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import { RandomFox } from '<olgaabx>/components/RandomFox'
@@ -9,15 +9,22 @@ const random = () => Math.floor(Math.random() * 123) + 1;
 //generate simple unique id
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-type ImageItems = {id: string, url: string};
+type ImageItem = {id: string, url: string};
 
 export default function Home() {
-  const [images, setImages] = useState<Array<ImageItems>>([
-    {id: generateId(), url: `https://randomfox.ca/images/${random()}.jpg`},
-    {id: generateId(), url: `https://randomfox.ca/images/${random()}.jpg`},
-    {id: generateId(), url: `https://randomfox.ca/images/${random()}.jpg`},
-    {id: generateId(), url: `https://randomfox.ca/images/${random()}.jpg`},
-  ]);
+  const [images, setImages] = useState<Array<ImageItem>>([]);
+
+  const addNewFox: MouseEventHandler<HTMLButtonElement> = () => {
+    const newImageItem: ImageItem = {
+      id: generateId(), 
+      url: `https://randomfox.ca/images/${random()}.jpg`
+    }
+
+    setImages([
+      ...images,
+      newImageItem
+    ])
+  }
   
   return (
     <>
@@ -31,6 +38,12 @@ export default function Home() {
         <h1 className="text-3xl font-bold underline">
           Hello world!
         </h1>
+        <button 
+        onClick={addNewFox}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+        >
+          Add new fox
+        </button>
         {images.map(({ id, url }) => (
           <div key={id} className='p-4'>
             <RandomFox image={url}/>
