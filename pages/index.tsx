@@ -1,23 +1,21 @@
 import { MouseEventHandler, useState } from 'react';
 import Head from 'next/head'
-import { Inter } from 'next/font/google'
-import { RandomFox } from '<olgaabx>/components/RandomFox'
+import { LazyImage } from '<olgaabx>/components/RandomFox'
+import { random } from 'lodash';
 
 // generate a random function between 1 and 123
-const random = () => Math.floor(Math.random() * 123) + 1;
+const myRandom = () => random(1, 123);
 
 //generate simple unique id
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-type ImageItem = {id: string, url: string};
-
 export default function Home() {
-  const [images, setImages] = useState<Array<ImageItem>>([]);
+  const [images, setImages] = useState<Array<IFoxImageItem>>([]);
 
   const addNewFox: MouseEventHandler<HTMLButtonElement> = () => {
-    const newImageItem: ImageItem = {
+    const newImageItem: IFoxImageItem = {
       id: generateId(), 
-      url: `https://randomfox.ca/images/${random()}.jpg`
+      url: `https://randomfox.ca/images/${myRandom()}.jpg`
     }
 
     setImages([
@@ -46,7 +44,15 @@ export default function Home() {
         </button>
         {images.map(({ id, url }) => (
           <div key={id} className='p-4'>
-            <RandomFox image={url}/>
+            <LazyImage
+            src={url}
+            width="320"
+            height="auto"
+            className="mx-auto rounded-md bg-gray-300"
+            onClick={() => {
+                console.log("holi!");
+            }}
+            />
           </div>
         ))}
       </main>
